@@ -1,1 +1,4 @@
 <h1>This is the Model's index page.</h1>
+<% @users.all.each do |user| %>
+<p><a href="/users/<%= user.id %>"><%= user.email %></a></p>
+<% end %>

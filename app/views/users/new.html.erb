@@ -1,1 +1,14 @@
-<h1>Insert the form to create a new instance of your model.</h1>
+<h1>Create Account</h1>
+<form method="post" action="/users">
+  <p>
+    <label for="user[email]">Email:</label>
+    <input type="text" name="user[email]" />
+  </p>
+  <p>
+    <label for="user[password]">Password:</label>
+    <input type="password" name="user[password]" />
+  </p>
+  <p>
+    <input type="submit" value="Create Account" />
+  </p>
+</form>

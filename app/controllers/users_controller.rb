@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
   # GET: /users
   get "/users" do
+    @users = User.all
     erb :"/users/index.html"
   end
 
@@ -12,7 +13,11 @@ class UsersController < ApplicationController
 
   # POST: /users
   post "/users" do
-    redirect "/users"
+    if User.create(params[:user])
+      redirect "/users"
+    else 
+      erb :"/users/new.html"
+    end
   end
 
   # GET: /users/5
