@@ -13,8 +13,9 @@ class UsersController < ApplicationController
 
   # POST: /users
   post "/users" do
-    if User.create(params[:user])
-      redirect "/users"
+    if user = User.create(params[:user])
+      session[:user_id] = user.id
+      redirect "/posts"
     else 
       erb :"/users/new.html"
     end
