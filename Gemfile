@@ -9,14 +9,18 @@ gem 'pg', '0.20'
 gem 'dotenv'
 gem 'rake'
 gem 'require_all'
-gem 'sqlite3'
 gem 'thin'
-gem 'shotgun'
 gem 'sysrandom'
 gem 'sinatra-flash'
-gem 'pry'
 gem 'bcrypt'
-gem "tux"
+
+group :development do 
+  gem 'sqlite3'
+  gem 'shotgun'
+  gem 'tux'
+  gem 'pry'
+
+end
 
 group :test do
   gem 'rspec'
