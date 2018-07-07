@@ -1,1 +1,15 @@
-<h1>Insert the form to create a new instance of your model.</h1>
+<h1>New Post</h1>
+<form method="post" action="/posts">
+  <p>
+    <label for="post[title]">Title: </label>
+    <input id="post[title]" name="post[title]" type="text" />
+  </p>
+  
+  <section><label for="post[content]">Content:</label></section>
+  <p>
+    <textarea name="post[content]" id="post[content]" rows="10" cols="80"></textarea>
+  </p>
+  <p>
+    <input type="submit" value="Create Post" />
+  </p>
+</form>

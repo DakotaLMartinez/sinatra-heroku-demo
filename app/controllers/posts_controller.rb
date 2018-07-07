@@ -2,22 +2,34 @@ class PostsController < ApplicationController
 
   # GET: /posts
   get "/posts" do
+    @posts = Post.all
     erb :"/posts/index.html"
   end
 
   # GET: /posts/new
   get "/posts/new" do
+    ensure_logged_in
     erb :"/posts/new.html"
   end
 
   # POST: /posts
   post "/posts" do
-    redirect "/posts"
+    ensure_logged_in
+    if current_user.posts.create(params[:post])
+      redirect "/posts"
+    else
+      erb "/posts/new.html"
+    end
   end
 
   # GET: /posts/5
   get "/posts/:id" do
-    erb :"/posts/show.html"
+    if @post = Post.find_by(id: params[:id])
+      erb :"/posts/show.html"
+    else
+      flash[:error] = "Couldn't find that post"
+      redirect "/posts"
+    end
   end
 
   # GET: /posts/5/edit
