@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 ruby '2.3.3'
 
 gem 'sinatra'
-gem 'activerecord', '4.2', :require => 'active_record'
+gem 'activerecord', '4.2.5.1', :require => 'active_record'
 gem 'sinatra-activerecord', :require => 'sinatra/activerecord'
 gem 'pg', '0.20'
 gem 'dotenv'
