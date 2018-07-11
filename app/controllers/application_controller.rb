@@ -6,9 +6,8 @@ class ApplicationController < Sinatra::Base
     set :public_folder, 'public'
     set :views, 'app/views'
     register Sinatra::Flash
-    use Rack::Session::Cookie, :key => 'rack.session',
-                               :path => '/',
-                               :secret => ENV.fetch('SESSION_SECRET') { SecureRandom.hex(64) }
+    enable :sessions
+    set :session_secret, ENV.fetch('SESSION_SECRET') 
   end
 
   get "/" do
@@ -18,6 +17,7 @@ class ApplicationController < Sinatra::Base
   helpers do 
 
     def current_user
+      puts session.inspect
       session[:user_id] && User.find_by(id: session[:user_id])
     end
 

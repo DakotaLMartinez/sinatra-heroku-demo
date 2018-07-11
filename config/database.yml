@@ -1,10 +1,8 @@
 development:
-  adapter: postgresql
+  adapter: sqlite3
   encoding: unicode
-  database: <%= ENV['DATABASE_NAME'] %>
-  pool: 2
-  username: <%= ENV['DATABASE_USER'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
+  database: db/development.sqlite3
+  pool: 5
 production:
   adapter: postgresql
   encoding: unicode

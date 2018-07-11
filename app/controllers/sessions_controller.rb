@@ -12,6 +12,7 @@ class SessionsController < ApplicationController
       session[:user_id] = @user.id
       redirect "/posts"
     else
+      flash.now[:error] = "Whoops! Try again."
       erb :"/sessions/new.html"
     end
   end
