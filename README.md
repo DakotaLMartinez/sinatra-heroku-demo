@@ -149,7 +149,7 @@ gem 'foreman'
 ```
 3. Create a Procfile in the root of your project and add the following content:
 ```
-web: bundle exec rackup -p $PORT
+web: bundle exec thin start -p $PORT
 release: bundle exec rake db:migrate
 ```
 
