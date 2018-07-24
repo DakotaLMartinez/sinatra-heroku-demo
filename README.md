@@ -91,10 +91,6 @@ production:
   adapter: postgresql
   encoding: unicode
   pool: 5
-  host: <%= ENV['DATABASE_HOST'] %>
-  database: <%= ENV['DATABASE_NAME'] %>
-  username: <%= ENV['DATABASE_USER'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
 ```
 
 and we'll need to update our config/environment.rb file to use this file to establish a connection to our DB. To do that, replace these lines
