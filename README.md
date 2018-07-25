@@ -51,6 +51,8 @@ cat ~/.ssh/id_rsa.pub > key.txt
 ```
 then open key.txt in the text editor. Copy all of the content and go into your [Heroku dashboard's Account Settings page](https://dashboard.heroku.com/account) to add the key to your account.
 
+After you've added the key to Heroku, make sure to delete key.txt file from your IDE.
+
 ### Create a new app
 
 Go to the [apps page](https://dashboard.heroku.com/apps) in your dashboard and click the new button on the top right, select create new app.
