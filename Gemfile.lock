@@ -60,8 +60,8 @@ GEM
     rack (2.0.6)
     rack-protection (2.0.5)
       rack
-    rack-test (1.1.0)
-      rack (>= 1.0, < 3)
+    rack-test (0.6.3)
+      rack (>= 1.0)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -74,10 +74,10 @@ GEM
       bond (~> 0.5.1)
     ripl-multi_line (0.3.1)
       ripl (>= 0.3.6)
-    ripl-rack (0.2.0)
+    ripl-rack (0.2.1)
       rack (>= 1.0)
-      rack-test (>= 0.5)
-      ripl (>= 0.3.5)
+      rack-test (~> 0.6.2)
+      ripl (>= 0.7.0)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -152,4 +152,4 @@ RUBY VERSION
    ruby 2.5.3p105
 
 BUNDLED WITH
-   2.0.1
+   1.15.2

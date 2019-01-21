@@ -214,3 +214,12 @@ set :database_file, "./database.yml"
 
 require_all 'app'
 ```
+
+# Troubleshooting Bundler version issues
+
+When I updated my ruby version I also installed bundler v2.  Heroku wants an older version of bundler (1.52) when I do the deployment, so I had to install it as well and then figure out how to use it to generate the Gemfile.lock.
+
+```
+gem install bundler -v 1.15.2
+bundle _1.15.2_ install
+```
