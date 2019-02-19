@@ -17,7 +17,7 @@ gem 'sinatra-flash'
 gem 'bcrypt'
 
 group :development do 
-  gem 'sqlite3'
+  gem 'sqlite3', '<1.4'
   gem 'shotgun'
   gem 'tux'
   gem 'pry'
