@@ -108,7 +108,7 @@ Finally, we need to create a development group in our Gemfile so we can still us
 source 'http://rubygems.org'
 
 gem 'sinatra'
-gem 'activerecord', '~> 4.2', '>= 4.2.6', :require => 'active_record'
+gem 'activerecord', '4.2.7.1', :require => 'active_record'
 gem 'sinatra-activerecord', :require => 'sinatra/activerecord'
 gem 'pg', '0.20'
 gem 'rake'
@@ -117,7 +117,7 @@ gem 'thin'
 gem 'bcrypt'
 
 group :development do
-  gem 'sqlite3'
+  gem 'sqlite3', '<1.4'
   gem 'shotgun'
   gem 'tux'
   gem 'pry'
