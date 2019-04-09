@@ -3,8 +3,10 @@
 You'll need to have the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed for this to work.
 
 - [Getting Started](#getting-started)
-- [Getting Heroku configured with IDE](#Heroku-and-the-learn-ide)
+- [Heroku and the Learn IDE](#heroku-and-the-learn-ide)
 - [Configuring Your Database](#configuring-your-database)
+- [Telling Heroku how to Run Your App](#telling-heroku-how-to-run-your-app)
+- [Configuring for Secure Session Cookies](#configuring-for-secure-session-cookies)
 
 # Getting Started
 
@@ -76,7 +78,7 @@ to deploy our app.
 
 # Configuring Your Database
 
-When I did this for the first time, the build was rejected because sqlite3 is not supported on Heroku. So, to make sure we can get our app deployed, we'll want to configure the app to use a postgresql database in production. For now, we'll keep our development database as sqlite. To set this up, let's create a config/database.yml file:
+When I did this for the first time, the build was rejected because sqlite3 is not supported on Heroku. So, to make sure we can get our app deployed, we'll want to configure the app to use a postgresql database in production. For now, we'll keep our development database as sqlite. To set this up, let's create a `config/database.yml` file:
 
 ```
 development:
@@ -102,7 +104,7 @@ with
 set :database_file, "./database.yml"
 ```
 
-Finally, we need to create a development group in our Gemfile so we can still use sqlite3 locally, while allowing heroku to use postgres. It should look like this when you're through:
+Finally, we need to create a development group in our `Gemfile` so we can still use sqlite3 locally, while allowing heroku to use postgres. We'll also want to add the rails 12_factor gem so we can get better errors in the logs. It should look like this when you're through:
 
 ```
 source 'http://rubygems.org'
@@ -134,9 +136,9 @@ end
 
 After making these changes, run `bundle install`, add and commit the changes and try to push to heroku again. We will most likely hit an error saying that we have a bad connection to the database. To fix this, we need to enable the postgres add on within the heroku dashboard view for our app. You'll find the page where you can add the Postgres add on in the resources tab of your app dashboard. For me this is https://dashboard.heroku.com/apps/guarded-journey-60283/resources. After you've enabled the add on, make some change to your repo, maybe adding a notes.md file where you add in notes about any changes you're making to the heroku config as you attempt to get the deployment working. After you've made a change and committed, try running `git push heroku master` again.
 
-## README NOT COMPLETE
+# Telling Heroku How to Run Your App
 
-The deploy may work, but when we try to run `heroku open` to view the site in the browser, we'll most likely see an error. When we visit https://dashboard.heroku.com/apps/guarded-journey-60283/logs we'll be able to see the logs and check out the error. But, the default errors here are not helpful. To get more helpful errors in the logs, let's make a few changes. 
+The deploy may work, but when we try to run `heroku open` to view the site in the browser, we'll most likely see an error. When we visit https://dashboard.heroku.com/apps/guarded-journey-60283/logs we'll be able to see the logs and check out the error. But, the default errors here are not helpful.  let's make a few changes. 
 
 1. Add the rails_12factor gem to your Gemfile.
 ```
@@ -146,15 +148,46 @@ gem 'rails_12factor'
 ```
 gem 'foreman'
 ```
-3. Create a Procfile in the root of your project and add the following content:
+3. Create a `Procfile` in the root of your project and add the following content:
 ```
 web: bundle exec thin start -p $PORT
 release: bundle exec rake db:migrate
 ```
 
 When I did this for the first time, I was able to see an error about my migrations being pending. That's how I googled to find the release option in the Procfile above that handles making sure heroku runs my migrations after a push.
+When you're done with this step, the Gemfile should look like this:
 
-## Configuring for Authentication
+```
+source 'http://rubygems.org'
+
+gem 'sinatra'
+gem 'activerecord', '4.2.7.1', :require => 'active_record'
+gem 'sinatra-activerecord', :require => 'sinatra/activerecord'
+gem 'pg', '0.20'
+gem 'rake'
+gem 'require_all'
+gem 'thin'
+gem 'bcrypt'
+gem 'rails_12factor'
+gem 'foreman'
+
+group :development do
+  gem 'sqlite3', '<1.4'
+  gem 'shotgun'
+  gem 'tux'
+  gem 'pry'
+end
+
+group :test do
+  gem 'rspec'
+  gem 'capybara'
+  gem 'rack-test'
+  gem 'database_cleaner', git: 'https://github.com/bmabey/database_cleaner.git'
+end
+```
+
+
+# Configuring for Secure Session Cookies
 
 In order to encrypt our session cookies, we need to set a session secret. We do this by adding a couple of lines to our config in our application controller. We need to enable sessions and then set the session_secret to an environment variable.
 
@@ -200,23 +233,60 @@ To add the secret in your heroku dashboard you'll want to go the settings tab fo
 
 **NOTE** Don't use this secret!!! The secret you use should be kept private and out of version control or anywhere else publically accessible.
 
-Lastly, we need to make sure that the secret is loaded into our environment. To do this, we'll need to add `Dotenv.load` to our config/environment.rb file:
+Lastly, we need to make sure that the secret is loaded into our environment. To do this, we'll need to add `Dotenv.load` to our config/environment.rb file. **BUT** we only want this to happen in the development environment because on heroku it won't have our .env file, we'll actually be loading from the environment variables we've defined within the dashboard via the Reveal Config Vars section. 
+
+So, to get this working in both development and production, we'll need to add a conditional check so we only do the Dotenv.load if `SINATRA_ENV` is development. Our config/environment.rb should look something like this:
 
 ```
+# config/environment.rb
 ENV['SINATRA_ENV'] ||= "development"
 
 require 'bundler/setup'
 Bundler.require(:default, ENV['SINATRA_ENV'])
-Dotenv.load
+Dotenv.load if ENV['SINATRA_ENV'] == "development"
 
 set :database_file, "./database.yml"
 
 require_all 'app'
 ```
 
-# Troubleshooting Bundler version issues
+**Important Last Step**: we'll need to actually define the `SINATRA_ENV` environment variable on heroku and set it equal to production so it won't be assigned to "development" on line 1 of our `config/environment.rb` file. If we try to deploy now without making that change first, we'll get a NameError saying that Dotenv is an uninitialized constant. This is because heroku defines RACK_ENV and sets it equal to production, but doesn't define SINATRA_ENV, so the first line of our config/environment.rb will assign `ENV['SINATRA_ENV']` to `"development"`, which is not what we want.
 
-When I updated my ruby version I also installed bundler v2.  Heroku wants an older version of bundler (1.52) when I do the deployment, so I had to install it as well and then figure out how to use it to generate the Gemfile.lock.
+Final Gemfile should look like this:
+
+```
+source 'http://rubygems.org'
+
+gem 'sinatra'
+gem 'activerecord', '4.2.7.1', :require => 'active_record'
+gem 'sinatra-activerecord', :require => 'sinatra/activerecord'
+gem 'pg', '0.20'
+gem 'rake'
+gem 'require_all'
+gem 'thin'
+gem 'bcrypt'
+gem 'rails_12factor'
+gem 'foreman'
+
+group :development do
+  gem 'sqlite3', '<1.4'
+  gem 'dotenv'
+  gem 'shotgun'
+  gem 'tux'
+  gem 'pry'
+end
+
+group :test do
+  gem 'rspec'
+  gem 'capybara'
+  gem 'rack-test'
+  gem 'database_cleaner', git: 'https://github.com/bmabey/database_cleaner.git'
+end
+```
+
+# Troubleshooting
+
+When I updated my ruby version I also installed bundler v2.  Heroku wants an older version of bundler (1.15.2) when I do the deployment, so I had to install it as well and then figure out how to use it to generate the Gemfile.lock.
 
 ```
 gem install bundler -v 1.15.2
