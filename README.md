@@ -81,6 +81,7 @@ to deploy our app.
 When I did this for the first time, the build was rejected because sqlite3 is not supported on Heroku. So, to make sure we can get our app deployed, we'll want to configure the app to use a postgresql database in production. For now, we'll keep our development database as sqlite. To set this up, let's create a `config/database.yml` file:
 
 ```
+# config/database.yml
 development:
   adapter: sqlite3
   encoding: unicode
@@ -92,8 +93,11 @@ production:
   pool: 5
 ```
 
-and we'll need to update our config/environment.rb file to use this file to establish a connection to our DB. To do that, replace these lines
+and we'll need to update our `config/environment.rb` file to use this file to establish a connection to our DB. To do that, replace these lines
 ```
+# config/environment.rb
+# ...
+
 ActiveRecord::Base.establish_connection(
   :adapter => "sqlite3",
   :database => "db/#{ENV['SINATRA_ENV']}.sqlite"
@@ -192,6 +196,7 @@ end
 In order to encrypt our session cookies, we need to set a session secret. We do this by adding a couple of lines to our config in our application controller. We need to enable sessions and then set the session_secret to an environment variable.
 
 ```
+# app/controllers/application_controller.rb
 configure do
   set :public_folder, 'public'
   set :views, 'app/views'
@@ -227,6 +232,7 @@ generate_secret
 in our terminal. Next, let's copy the secret from our terminal output and add it both in the SESSION_SECRET config var on heroku, and in your .env file locally. It should look like something like this in your .env file:
 
 ```
+# .env
 SESSION_SECRET=8ad90be1a5a9aaaf04a0a99d8efb42c825f16b8fef603f65b600c91d66a17bdd520099130ed70669409a524a97c8f62e9434a0ad102624f9bcff0832e3c2f568
 ```
 To add the secret in your heroku dashboard you'll want to go the settings tab for your app, for me this is at: https://dashboard.heroku.com/apps/guarded-journey-60283/settings. Then, click the button that says Reveal Config Vars. Add in another one called SESSION_SECRET to ensure that your sessions remain secure. 
