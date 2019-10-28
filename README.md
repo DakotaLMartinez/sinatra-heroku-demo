@@ -25,6 +25,11 @@ git init
 git add .
 git commit -m "initial commit"
 ```
+After you've created the git repository locally, you'll want to create a repository on Github and connect the two. To do that, you'll go to [https://github.com/new](https://github.com/new) and give your repo a name don't change anything else and click the green Create Repository button. After that, click the clipboard button next to the second block of code on the new repo page.
+
+![Code to push existing repo from commandline](https://i.ibb.co/5Yf8JBW/Screen-Shot-2019-10-28-at-4-32-26-PM.png)
+
+After doing that, return to your terminal and paste the code you copied (by clicking on that clipboard button) and hit enter. After you refresh the page, you should see the code from your text editor on GitHub. From that point on, you can run `git push` to update your repo on GitHub after adding and committing changes to your local repository.
 
 Now, the instructions are a bit different for those who are working locally. If you are still using the Learn IDE, then you can skip to [that section]((#Heroku-and-the-learn-ide)) below, otherwise continue here and skip that section when you come to it.
 
