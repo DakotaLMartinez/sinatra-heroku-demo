@@ -20,6 +20,12 @@ After the gem is installed, we can bootstrap a new Sinatra app by using the `cor
 
 After our new app is created, let's cd into the directory and run `bundle install` to create a Gemfile.lock. After that, let's initialize a new git repository there, add all the files and make an initial commit. 
 
+```
+git init
+git add .
+git commit -m "initial commit"
+```
+
 Now, the instructions are a bit different for those who are working locally. If you are still using the Learn IDE, then you can skip to [that section]((#Heroku-and-the-learn-ide)) below, otherwise continue here and skip that section when you come to it.
 
 # Setting up Heroku Toolbelt (local env only)
