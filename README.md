@@ -127,7 +127,6 @@ source 'http://rubygems.org'
 gem 'sinatra'
 gem 'activerecord', '4.2.7.1', :require => 'active_record'
 gem 'sinatra-activerecord', :require => 'sinatra/activerecord'
-gem 'pg', '0.20'
 gem 'rake'
 gem 'require_all'
 gem 'thin'
@@ -138,6 +137,10 @@ group :development do
   gem 'shotgun'
   gem 'tux'
   gem 'pry'
+end
+
+group :production do 
+  gem 'pg', '0.20'
 end
 
 group :test do
